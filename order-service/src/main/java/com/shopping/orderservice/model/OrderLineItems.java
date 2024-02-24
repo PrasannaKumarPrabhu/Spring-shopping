@@ -21,6 +21,5 @@ public class OrderLineItems {
     private Long id;
     private String skuCode;
     private BigDecimal price;
-    @OneToMany(cascade = CascadeType.ALL)
-    private List<OrderLineItems> orderLineItemsList;
+    private Integer quantity;
 }
