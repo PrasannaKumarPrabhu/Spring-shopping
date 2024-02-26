@@ -2,6 +2,8 @@ package com.shopping.productservice;
 
 import com.fasterxml.jackson.databind.ObjectMapper; // Import ObjectMapper
 import com.shopping.productservice.dto.ProductRequest;
+import com.shopping.productservice.repository.ProductRepository;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -19,16 +21,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @TestPropertySource(properties = {
-		"spring.datasource.url=jdbc:postgresql://localhost:5432/product-service",
-		"spring.datasource.username=postgres",
-		"spring.datasource.password=0000"
+		"spring.datasource.url=jdbc:postgresql://localhost:5432/mydb",
+		"spring.datasource.username=admin",
+		"spring.datasource.password=admin"
 })
 @Transactional
 class ProductServiceApplicationTests {
 
 	@Autowired
 	private MockMvc mockMvc;
-
+	@Autowired
+	private ProductRepository productRepository;
 	@Autowired
 	private ObjectMapper objectMapper; // Inject ObjectMapper
 
@@ -41,13 +44,15 @@ class ProductServiceApplicationTests {
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(productRequestString)
 		).andExpect(status().isCreated());
+
+        Assertions.assertEquals(1, productRepository.findAll().size());
 	}
 
 	private ProductRequest getProductRequest() {
 		return ProductRequest.builder()
-				.name("Iphone 13")
-				.description("iphone 13")
-				.price(BigDecimal.valueOf(1200))
+				.name("Iphone 8")
+				.description("iphone 8")
+				.price(BigDecimal.valueOf(400))
 				.build();
 	}
 
